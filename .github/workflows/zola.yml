@@ -13,4 +13,4 @@ jobs:
         BUILD_THEMES: true
         BUILD_DIR: notes
         BUILD_FLAGS: --drafts
-        TOKEN: ${{ secrets.TOKEN }}
+        TOKEN: ${{ secrets.GITHUB_TOKEN }}
