@@ -9,8 +9,7 @@ jobs:
     - name: shalzz/zola-deploy-action
       uses: shalzz/zola-deploy-action@master
       env:
-        PAGES_BRANCH: gh-pages
-        BUILD_THEMES: false
         BUILD_DIR: notes
-        BUILD_FLAGS: --drafts
+        BUILD_THEMES: false
+        PAGES_BRANCH: gh-pages
         TOKEN: $GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}
