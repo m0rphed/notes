@@ -4,8 +4,6 @@ base_url = "https://morphed.info"
 # Use the Tale-Zola theme
 theme = "even"
 
-
-
 # Works only in theme: even
 taxonomies = [
     # You can enable/disable RSS
