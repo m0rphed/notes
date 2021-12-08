@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title> - Writing MiniML compiler to MS IL just to tinker with set-theoretic types</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+
+          <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+          <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/contrib/mathtex-script-type.min.js" integrity="sha384-zWYbd0NBwgTsgIdFKVprSfTh1mbMPe5Hz1X3yY4Sd1h/K1cQoUe36OGwAGz/PcDy" crossorigin="anonymous"></script>
+              
+          <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"
+                  onload="renderMathInElement(document.body);"></script>
+              
+          
+      
+
+      
+          <link rel="stylesheet" href="https://m0rphed.github.io/notes/site.css">
+          
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+          
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">m0rph&#x27;s notes</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;m0rphed.github.io&#x2F;notes&#x2F;">
+                            Home
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;m0rphed.github.io&#x2F;notes&#x2F;&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;m0rphed.github.io&#x2F;notes&#x2F;&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;m0rphed.github.io&#x2F;notes&#x2F;&#x2F;about">
+                            About
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;m0rphed.github.io&#x2F;notes&#x2F;">m0rph&#x27;s notes</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;m0rphed.github.io&#x2F;notes&#x2F;">
+                                    Home
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;m0rphed.github.io&#x2F;notes&#x2F;&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;m0rphed.github.io&#x2F;notes&#x2F;&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;m0rphed.github.io&#x2F;notes&#x2F;&#x2F;about">
+                                    About
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+<div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content always-active">
+        <nav id="TableOfContents">
+            <ul>
+                
+                <li>
+                    <a href="https://m0rphed.github.io/notes/miniml-with-polymorphic-variants/#chernovik" class="toc-link">Черновик</a>
+                    
+                    <ul>
+                        
+                        <li>
+                            <a href="https://m0rphed.github.io/notes/miniml-with-polymorphic-variants/#polimorfnye-varianty-v-ocaml" class="toc-link">Полиморфные Варианты (в OCaml)</a>
+                        </li>
+                        
+                        <li>
+                            <a href="https://m0rphed.github.io/notes/miniml-with-polymorphic-variants/#polimorfnye-varianty-1" class="toc-link">Полиморфные варианты</a>
+                        </li>
+                        
+                        <li>
+                            <a href="https://m0rphed.github.io/notes/miniml-with-polymorphic-variants/#tipy-obedineniia-v-drugikh-iap" class="toc-link">Типы-Объединения в других ЯП</a>
+                        </li>
+                        
+                        <li>
+                            <a href="https://m0rphed.github.io/notes/miniml-with-polymorphic-variants/#semantic-subtyping" class="toc-link">Semantic Subtyping</a>
+                        </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;m0rphed.github.io&#x2F;notes&#x2F;miniml-with-polymorphic-variants&#x2F;">Writing MiniML compiler to MS IL just to tinker with set-theoretic types</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-05-03</span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <hr />
+<!-- 
+### Тема: Имплементация компилятора с выводом типов на языке F# для постановки эксперимента
+# Ocaml и полиморфные варианты -->
+<ul>
+<li>Как читать тайпчек-грамматику: https://mukulrathi.netlify.app/create-your-own-programming-language/intro-to-type-checking/</li>
+<li>Dynamic Type Inference: https://www.youtube.com/watch?v=WYEKk2CeXsI</li>
+<li>Dynamic Type Inference for Gradual Hindley-Milner Typing: https://arxiv.org/abs/1810.126191V</li>
+</ul>
+<h2 id="chernovik">Черновик</h2>
+<h3 id="polimorfnye-varianty-v-ocaml">Полиморфные Варианты (в OCaml)</h3>
+<p>В языке OCaml есть &quot;Типы-Варианты / Варианты&quot; (они же размеченные объединения в F#)</p>
+<p>Их также иногда называют алгебраическими типами данных (Algebraic Data Types), они есть во многих ЯП, но устроены они могут быть по-разному (в OCaml реализация ADT - это и есть &quot;варианты&quot;), тем кто ранее не встречался с упомянутыми понятиями это может напоминать enum-ы.</p>
+<p>Они позволяют программисту описать такой тип данных, который может иметь различные формы,
+каждый из различных &quot;вариантов&quot; такой формы будет обозначен (&quot;размечен&quot;) некоторым тегом (названием/словом).</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">type point </span><span>= </span><span style="color:#b48ead;">float </span><span>* </span><span style="color:#b48ead;">float
+</span><span style="color:#b48ead;">type shape </span><span>=
+</span><span>  | Point </span><span style="color:#b48ead;">of point
+</span><span>  | Circle </span><span style="color:#b48ead;">of point </span><span>* </span><span style="color:#b48ead;">float </span><span style="color:#65737e;">(* center and radius *)
+</span><span>  | Rect </span><span style="color:#b48ead;">of point </span><span>* </span><span style="color:#b48ead;">point </span><span style="color:#65737e;">(* lower-left and upper-right corners *)
+</span></code></pre>
+<p>https://cs3110.github.io/textbook/chapters/data/algebraic_data_types.html</p>
+<hr />
+<p>Далее можно обрабатывать вариант <code>shape</code> также как и любой другой тип - передавать его в функции, присваивать ...</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#bf616a;">someShape </span><span>= Circle ((</span><span style="color:#d08770;">0.</span><span>, </span><span style="color:#d08770;">0.</span><span>), </span><span style="color:#d08770;">1.</span><span>)
+</span><span>
+</span><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">center </span><span>= </span><span style="color:#b48ead;">function
+</span><span>  </span><span style="color:#b48ead;">| </span><span>Point </span><span style="color:#bf616a;">p </span><span>-&gt; p
+</span><span>  </span><span style="color:#b48ead;">| </span><span>Circle (</span><span style="color:#bf616a;">p</span><span>, </span><span style="color:#bf616a;">_</span><span>) -&gt; p
+</span><span>  </span><span style="color:#b48ead;">| </span><span>Rect ((</span><span style="color:#bf616a;">x1</span><span>, </span><span style="color:#bf616a;">y1</span><span>), (</span><span style="color:#bf616a;">x2</span><span>, </span><span style="color:#bf616a;">y2</span><span>)) -&gt; ((x2 +. x1) /. </span><span style="color:#d08770;">2.0</span><span>, (y2 +. y1) /. </span><span style="color:#d08770;">2.0</span><span>)
+</span><span>
+</span><span>center someShape </span><span style="color:#65737e;">(* вернёт центр окружности: (0., 0.) *)
+</span></code></pre>
+<h4 id="polimorfnye-varianty">Полиморфные варианты</h4>
+<p>Представим более сложный пример:</p>
+<p>Мы объявляем вариант описывающий виды некоторых животных, причём есть особый подтип животного, который имеет собственное имя</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">type animal </span><span>= 
+</span><span>| Wolf
+</span><span>| Tiger
+</span><span>| Named </span><span style="color:#b48ead;">of string
+</span></code></pre>
+<p>Так же мы с помощью варианта <code>ancestors</code> описываем различных предков человека (предки человека формально тоже являются <em><strong>некоторым видом</strong></em> животных)</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">type ancestors </span><span>=
+</span><span>| HomoSapien
+</span><span>| Neanderthal
+</span></code></pre>
+<p>Теперь мы хотим получить валидное название для любого вида, и для этого мы вводим функцию <code>string_of_animal</code>:</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">string_of_animal </span><span style="color:#bf616a;">x </span><span>= </span><span style="color:#b48ead;">match</span><span> x </span><span style="color:#b48ead;">with
+</span><span>| Wolf -&gt; &quot;</span><span style="color:#a3be8c;">wolf</span><span>&quot;
+</span><span style="color:#b48ead;">| </span><span>Tiger -&gt; &quot;</span><span style="color:#a3be8c;">tiger</span><span>&quot;
+</span><span style="color:#b48ead;">| </span><span>Named </span><span style="color:#bf616a;">name </span><span>-&gt; &quot;</span><span style="color:#a3be8c;">It&#39;s name is </span><span>&quot; ^ name
+</span></code></pre>
+<p>Выведенный тип функции будет: <code>val string_of_animal : animal -&gt; string = &lt;fun&gt;</code></p>
+<hr />
+<p>вызов функции</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span>string_of_animal (Named &quot;</span><span style="color:#a3be8c;">Cheburashka</span><span>&quot;);;
+</span></code></pre>
+<p>вернёт нам:</p>
+<p><code>- : string = &quot;It's name is Cheburashka&quot;</code> всё работает ожидаемо,
+но что если нам требуется функция,
+которая сможет вернуть валидную строку как для любого животного,
+так и для предков человека?</p>
+<hr />
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">string_of_animal </span><span style="color:#bf616a;">x </span><span>= </span><span style="color:#b48ead;">match</span><span> x </span><span style="color:#b48ead;">with
+</span><span>| Wolf -&gt; &quot;</span><span style="color:#a3be8c;">wolf</span><span>&quot;
+</span><span style="color:#b48ead;">| </span><span>Tiger -&gt; &quot;</span><span style="color:#a3be8c;">tiger</span><span>&quot;
+</span><span style="color:#b48ead;">| </span><span>Named </span><span style="color:#bf616a;">name </span><span>-&gt; &quot;</span><span style="color:#a3be8c;">It&#39;s called </span><span>&quot; ^ name;;
+</span><span style="color:#b48ead;">| </span><span>HomoSapien -&gt; &quot;</span><span style="color:#a3be8c;">homo sapien</span><span>&quot;
+</span><span style="color:#b48ead;">| </span><span>Neanderthal -&gt; &quot;</span><span style="color:#a3be8c;">neanderthal</span><span>&quot;
+</span><span style="color:#65737e;">(**
+</span><span style="color:#65737e;">Error: This variant pattern is expected to have type firstHuman
+</span><span style="color:#65737e;">       The constructor Dog does not belong to type firstHuman
+</span><span style="color:#65737e;">*)
+</span></code></pre>
+<p>Т.к. обычные варианты не поддерживают полиморфизм, компилятор не сможет вывести обобщённый тип для аргумента <code>x</code> функции <code>string_of_animal</code>.</p>
+<h3 id="polimorfnye-varianty-1">Полиморфные варианты</h3>
+<p>Изначально полиморфные варианты планировалось добавить в качестве реализации &quot;типов объединения&quot; системы типизации в OCaml.
+Типы объединения особенно удобны для случаев когда мы работаем с разными наборами полиморфных данных.</p>
+<p>Переписав функцию <code>string_of_animal</code>, заменив &quot;обычные варианты&quot; на полиморфные,
+компилятор сможет вывести обобщённый тип для аргумента:</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">string_of_beast </span><span style="color:#bf616a;">x </span><span>= </span><span style="color:#b48ead;">match</span><span> x </span><span style="color:#b48ead;">with
+</span><span>| `HomoSapien	-&gt; &quot;</span><span style="color:#a3be8c;">homo sapien</span><span>&quot;
+</span><span style="color:#b48ead;">| </span><span>`Neanderthal	-&gt; &quot;</span><span style="color:#a3be8c;">neanderthal</span><span>&quot;
+</span><span style="color:#b48ead;">| </span><span>`Dog			-&gt; &quot;</span><span style="color:#a3be8c;">dog</span><span>&quot;
+</span><span style="color:#b48ead;">| </span><span>`Cat			-&gt; &quot;</span><span style="color:#a3be8c;">cat</span><span>&quot;
+</span><span style="color:#b48ead;">| </span><span>`Named </span><span style="color:#bf616a;">name 	</span><span>-&gt; &quot;</span><span style="color:#a3be8c;">It&#39;s called </span><span>&quot; ^ name;;
+</span></code></pre>
+<p>Обобщённый тип:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>val string_of_beast :
+</span><span>  [&lt; `Cat | `Dog | `HomoSapien | `Named of string | `Neanderthal ]
+</span><span>    -&gt; string = &lt;fun&gt;
+</span></code></pre>
+<p>При выводе типов union types позволяют получить более &quot;точное&quot; (finer grained) разбиение типов, чем при использовании обычных <strong>ADT</strong> (вариантов).</p>
+<p>Однако существуют ограничения:</p>
+<ul>
+<li>нельзя использовать полиморфные варианты вместе с дженерик-типами</li>
+<li>сообщения об ошибках типизации очень длинные</li>
+<li></li>
+</ul>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code></code></pre>
+<ol>
+<li>ошибки типиизации часто очень длинные (с этим не очень понятно что делать)</li>
+<li>иногда выводятся не очень естественные типы
+Пункт 2 как-то пофиксил Кастанья, и сказал, чтобы всё (3й пример) было зашибись нам нужен RTTI
+Который никогда не прибудет в мейнстримный OCaml.
+Поэтому было выбрано решение релизовать минимальное подмножество фщка с компиляцией куда-нить, где есть RTTI
+И был выбран .NET а не JVM потому что студент более знаком с .NET</li>
+</ol>
+<hr />
+<p>https://arxiv.org/pdf/1606.01106.pdf (раздел 1. Introduction)</p>
+<h3 id="tipy-obedineniia-v-drugikh-iap"><strong>Типы-Объединения в других ЯП</strong></h3>
+<p>В других языках также существуют &quot;Типы объединения&quot; (Union Types), семантика которых соответствует объединению множеств.</p>
+<p>Например в TypeScript их можно объявить с помощью значка &quot;<code>|</code>&quot; прямо в аннотации функции:</p>
+<pre data-lang="typescript" style="background-color:#2b303b;color:#c0c5ce;" class="language-typescript "><code class="language-typescript" data-lang="typescript"><span style="color:#b48ead;">function </span><span style="color:#8fa1b3;">printId</span><span>(</span><span style="color:#bf616a;">id</span><span>: number | string) { </span><span style="color:#65737e;">// Объединение: &lt;число&gt; ∪ &lt;строка&gt;
+</span><span>  </span><span style="color:#ebcb8b;">console</span><span>.</span><span style="color:#96b5b4;">log</span><span>(</span><span style="color:#bf616a;">id</span><span>);
+</span><span>}
+</span></code></pre>
+<p>При передаче аргумента несоответствующего объединению</p>
+<pre data-lang="typescript" style="background-color:#2b303b;color:#c0c5ce;" class="language-typescript "><code class="language-typescript" data-lang="typescript"><span style="color:#8fa1b3;">printId </span><span>([&quot;</span><span style="color:#a3be8c;">union type constraint error</span><span>&quot;]);
+</span><span style="color:#65737e;">// ожидаем ошибку типизации в &quot;compile time&quot;
+</span></code></pre>
+<p>будет ошибка:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>Argument of type &#39;string[]&#39; is not assignable
+</span><span>    to parameter of type &#39;string | number&#39;.
+</span><span>  Type &#39;string[]&#39; is not assignable to type &#39;string&#39;.
+</span></code></pre>
+<p>Если попробовать вызвать метод который объявлен только у некоторых из причисленных в объединении типов </p>
+<pre data-lang="typescript" style="background-color:#2b303b;color:#c0c5ce;" class="language-typescript "><code class="language-typescript" data-lang="typescript"><span style="color:#b48ead;">function </span><span style="color:#8fa1b3;">printId</span><span>(</span><span style="color:#bf616a;">id</span><span>: number | string) { </span><span style="color:#65737e;">// Объединение: &lt;число&gt; ∪ &lt;строка&gt;
+</span><span>  </span><span style="color:#ebcb8b;">console</span><span>.</span><span style="color:#96b5b4;">log</span><span>(</span><span style="color:#bf616a;">id</span><span>.</span><span style="color:#96b5b4;">toUpperCase</span><span>());
+</span><span>}
+</span></code></pre>
+<p>точно также будет ожидаемая ошибка:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>Property &#39;toUpperCase&#39; does not exist on type &#39;string | number&#39;.
+</span><span>  Property &#39;toUpperCase&#39; does not exist on type &#39;number&#39;.
+</span></code></pre>
+<p>такой способ представления типов <em>интуитивно</em> ближе к представлению типов в качестве множеств, однако не для всех систем типов можно реализовать такой механизм.</p>
+<h3 id="semantic-subtyping">Semantic Subtyping</h3>
+<p><strong>WARNING: NOT READY</strong></p>
+<p>The distinguishing feature of a type system using SemanticSubtyping is that it has a set-theoretic model, in which types correspond directly to sets of values.
+Many recent type systems rely on a subtyping relation. Its definition generally depends on the type algebra, and on its intended use. We can distinguish two main approaches for defining subtyping: the syntactic approach and the semantic one. The syntactic approach -- by far the most widespread -- consists in defining the subtyping relation by axiomatising it in a formal system (a set of inductive or coinductive rules); in the semantic approach [...], instead, one starts with a model of the language and an interpretation of types as subsets of the model, then defines the subtyping relation as the inclusion of denoted sets, and, finally, when the relation is decidable, derives a subtyping algorithm from the semantic definition.</p>
+<p>Утверждается, что система (теоретико-множественная система типов - set-theoretic type system) хорошо подходит для типизации полиморфных вариантов.</p>
+<p>и выгодно отличается от того, который в настоящее время используется в OCaml.</p>
+<p><strong>Note:</strong></p>
+<ol>
+<li>Use the online reference of <a href="https://katex.org/docs/supported.html">Supported TeX Functions</a></li>
+</ol>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https://m0rphed.github.io/notes/tags/miniml/">#MiniML</a>
+                    
+                        <a href="https://m0rphed.github.io/notes/tags/type-theory/">#Type Theory</a>
+                    
+                </div>
+            
+            
+
+        
+
+    </div>
+
+    
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https://m0rphed.github.io/notes/even.js" ></script>
+      
+    </body>
+
+</html>
