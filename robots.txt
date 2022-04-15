@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://m0rphed.github.io/notes/sitemap.xml
