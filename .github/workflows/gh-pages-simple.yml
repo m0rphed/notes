@@ -23,6 +23,7 @@ jobs:
           # extended: true
 
       - name: Build
+        working-directory: ./notes
         run: hugo --minify --buildDrafts --baseURL https://m0rphed.github.io/notes/
 
       - name: Deploy
