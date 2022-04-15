@@ -1,2 +1,3 @@
-# notes
-course notes
+# Notes
+
+R.I.P, my notes 👻
