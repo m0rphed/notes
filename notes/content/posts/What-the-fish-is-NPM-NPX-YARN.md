@@ -3,8 +3,11 @@ title: "🗿 npm, npx, yarn"
 date: 2022-04-26
 draft: true
 description: "Npm, npx, yarn tips"
+slug: "npm-npx-yarn"
 tags: ["javascript", "web", "tldr"]
 ---
+
+![yarn](./npx-demo.gif)
 
 ## npm - пакетный менеджер Node.JS
 
@@ -124,7 +127,7 @@ npx degit svelte/t
 
 ## Yarn - альтернативный пакетный менеджер
 
-![yarn](yarn_logo.svg)
+![yarn](./yarn_logo.svg)
 
 ```bash
 # Install a module globally:
