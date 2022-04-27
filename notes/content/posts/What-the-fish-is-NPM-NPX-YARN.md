@@ -3,7 +3,6 @@ title: "🗿 npm, npx, yarn"
 date: 2022-04-26
 draft: true
 description: "Npm, npx, yarn tips"
-slug: "test"
 tags: ["javascript", "web", "tldr"]
 ---
 
