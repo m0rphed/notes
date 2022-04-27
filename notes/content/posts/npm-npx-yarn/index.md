@@ -1,5 +1,5 @@
 ---
-title: "🗿 npm, npx, yarn"
+title: "🗿 What the 🐟 are npm, npx, yarn?"
 date: 2022-04-26
 draft: true
 description: "Npm, npx, yarn tips"
@@ -7,7 +7,7 @@ slug: "npm-npx-yarn"
 tags: ["javascript", "web", "tldr"]
 ---
 
-![yarn](./npx-demo.gif)
+![Example usage of npx](npx-demo.gif)
 
 ## npm - пакетный менеджер Node.JS
 
