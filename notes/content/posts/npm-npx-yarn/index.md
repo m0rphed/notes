@@ -7,7 +7,11 @@ slug: "npm-npx-yarn"
 tags: ["javascript", "web", "tldr"]
 ---
 
-<!-- ![Example usage of npx](npx-demo.gif) -->
+{{< figure
+    src="npx-demo.gif"
+    caption="Example usage of npx"
+    default=true
+    >}}
 
 ## npm - пакетный менеджер Node.JS
 
